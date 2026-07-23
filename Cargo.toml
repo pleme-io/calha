@@ -1,0 +1,42 @@
+[workspace]
+resolver = "2"
+members = ["calha"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89.0"
+license = "MIT"
+repository = "https://github.com/pleme-io/calha"
+authors = ["pleme-io"]
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1" }
+serde_yaml_ng = { version = "0.10" }
+thiserror = { version = "2" }
+anyhow = { version = "1" }
+async-trait = { version = "0.1" }
+clap = { version = "4", features = ["derive", "env"] }
+tracing = { version = "0.1" }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "json"] }
+schemars = { version = "0.8" }
+chrono = { version = "0.4", features = ["serde"] }
+kube = { version = "0.99", features = ["client", "rustls-tls", "runtime", "derive", "unstable-runtime"] }
+k8s-openapi = { version = "0.24", features = ["latest"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+
+[workspace.lints]
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"
+
+[profile]
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "z"
+strip = true
