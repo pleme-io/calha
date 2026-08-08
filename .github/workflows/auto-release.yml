@@ -1,40 +1,11 @@
 name: auto-release
 
-# Three-line consumer shim. Every push to main runs the pleme-io
-# substrate single-crate auto-release pipeline (bump → commit →
-# tag → push → publish-to-crates.io). The reusable workflow lives
-# at pleme-io/substrate/.github/workflows/cargo-auto-release.yml.
-#
-# WHY THE SINGLE-CRATE VARIANT, NOT rust-auto-release.yml
-#
-# calha is a workspace, so rust-auto-release.yml (publish-each-member in
-# dependency order) looks like the right fit and was tried first. It fails at
-# its "Resolve test environment" step, which evaluates
-# `(builtins.getFlake (toString ./.)).devShells or {}` — and calha's flake.nix
-# declares no devShells at all, plus references `flake:crate2nix`, which is not
-# in the flake registry, so the flake does not evaluate standalone. A failed
-# test gate skips BOTH `ship` and `drip`, so the crate never publishes.
-#
-# The workspace has exactly one member (`members = ["calha"]`), so nothing is
-# lost: cargo-auto-release.yml's `crate-path` points at that member and
-# publishes it directly, with no devShell dependency. Switch back to the
-# workspace variant if calha ever grows a second member AND its flake grows a
-# real devShell.
-
 on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      bump-type:
-        description: "patch | minor | major"
-        required: false
-        default: patch
 
 jobs:
   release:
     uses: pleme-io/substrate/.github/workflows/cargo-auto-release.yml@main
-    with:
-      bump-type: ${{ inputs.bump-type || 'patch' }}
-      crate-path: calha
     secrets: inherit
