@@ -100,6 +100,11 @@ mod tests {
             watermark: ConfigWatermark {
                 full: "full-hash".to_string(),
                 restart_required: restart_required.to_string(),
+                // plan_tick compares ONLY restart_required — a Free-class edit
+                // must not provoke a restart — so this half is deliberately
+                // constant across these fixtures. Its presence is what makes
+                // that indifference an assertion rather than an omission.
+                free: "free-hash".to_string(),
             },
             observed_at_epoch,
         }
