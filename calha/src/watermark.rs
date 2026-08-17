@@ -58,7 +58,10 @@ pub enum WatermarkError {
         source: reqwest::Error,
     },
     #[error("target at {url} returned non-success status {status}")]
-    Status { url: String, status: reqwest::StatusCode },
+    Status {
+        url: String,
+        status: reqwest::StatusCode,
+    },
 }
 
 /// Fetches a target's current [`ConfigSyncProof`] from its `/healthz/config`
@@ -73,7 +76,10 @@ pub async fn fetch_sync_proof(
         .get(&url)
         .send()
         .await
-        .map_err(|source| WatermarkError::Request { url: url.clone(), source })?;
+        .map_err(|source| WatermarkError::Request {
+            url: url.clone(),
+            source,
+        })?;
 
     if !resp.status().is_success() {
         return Err(WatermarkError::Status {

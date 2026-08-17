@@ -12,16 +12,16 @@ use std::{sync::Arc, time::Duration};
 use futures::StreamExt;
 use k8s_openapi::api::apps::v1::Deployment;
 use kube::{
-    api::{Api, Patch, PatchParams},
-    runtime::{controller::Action, predicates, reflector, watcher, Controller, WatchStreamExt},
     Client, ResourceExt,
+    api::{Api, Patch, PatchParams},
+    runtime::{Controller, WatchStreamExt, controller::Action, predicates, reflector, watcher},
 };
 use serde_json::json;
 use tracing::{error, info, warn};
 
 use crate::crd::{CalhaPolicy, CalhaPolicyStatus};
-use crate::runtime::{plan_tick, TickOutcome};
-use crate::watermark::{fetch_sync_proof, WatermarkError};
+use crate::runtime::{TickOutcome, plan_tick};
+use crate::watermark::{WatermarkError, fetch_sync_proof};
 
 const DEFAULT_REQUEUE_SECS: u64 = 30;
 const DEFAULT_ERROR_REQUEUE_SECS: u64 = 15;
@@ -57,14 +57,25 @@ async fn reconcile(policy: Arc<CalhaPolicy>, ctx: Arc<Ctx>) -> Result<Action, Er
         Ok(p) => p,
         Err(e) => {
             warn!(policy = %name, error = %e, "failed to read target sync proof, will retry");
-            return Ok(Action::requeue(Duration::from_secs(DEFAULT_ERROR_REQUEUE_SECS)));
+            return Ok(Action::requeue(Duration::from_secs(
+                DEFAULT_ERROR_REQUEUE_SECS,
+            )));
         }
     };
 
-    let last_applied = policy.status.as_ref().and_then(|s| s.last_applied_watermark.as_deref());
+    let last_applied = policy
+        .status
+        .as_ref()
+        .and_then(|s| s.last_applied_watermark.as_deref());
     let now = chrono::Utc::now().timestamp();
 
-    let outcome = plan_tick(&policy.spec.promotion, last_applied, &proof, now, ctx.frozen);
+    let outcome = plan_tick(
+        &policy.spec.promotion,
+        last_applied,
+        &proof,
+        now,
+        ctx.frozen,
+    );
 
     let deployments: Api<Deployment> = Api::namespaced(ctx.client.clone(), &ns);
     let policies: Api<CalhaPolicy> = Api::namespaced(ctx.client.clone(), &ns);
@@ -125,7 +136,11 @@ async fn reconcile(policy: Arc<CalhaPolicy>, ctx: Arc<Ctx>) -> Result<Action, Er
 
     let status_patch = json!({ "status": new_status });
     policies
-        .patch_status(&name, &PatchParams::apply("calha"), &Patch::Merge(&status_patch))
+        .patch_status(
+            &name,
+            &PatchParams::apply("calha"),
+            &Patch::Merge(&status_patch),
+        )
         .await?;
 
     Ok(Action::requeue(ctx.requeue))
