@@ -100,8 +100,7 @@ impl CalhaPromotionMode {
     }
 }
 
-/// `calha.pleme.io/v1alpha1` `CalhaPolicy` — per §17 of CALHA.md's corrections
-/// ledger, the Kind name matches the fleet's real convention (a repo with its
+/// `calha.pleme.io/v1alpha1` `CalhaPolicy` — the Kind name matches the fleet's real convention (a repo with its
 /// own minted domain word reuses that word as the Kind, mirroring
 /// `breathe-crd`'s `Densa`/`QuinhaoPool` and `ensaio`'s `Ensaio`).
 #[derive(CustomResource, Serialize, Deserialize, Clone, Debug, JsonSchema)]
