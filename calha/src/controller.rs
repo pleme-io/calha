@@ -3,7 +3,7 @@
 //! `predicate_filter(predicates::generation)` so a status-only self-patch
 //! never re-triggers the watch, `Action::requeue` drives the periodic tick.
 //!
-//! `theory/CALHA.md` §14.1 chose ONE crate with internal module boundaries
+//! The design chose ONE crate with internal module boundaries
 //! over a four-crate split; this module owns the wiring, `runtime::plan_tick`
 //! owns the decision, `watermark` owns the read.
 
@@ -96,7 +96,7 @@ async fn reconcile(policy: Arc<CalhaPolicy>, ctx: Arc<Ctx>) -> Result<Action, Er
         }
         TickOutcome::Apply { new_watermark } => {
             info!(policy = %name, watermark = %new_watermark, "applying -- patching pod-template-hash annotation to drive a rolling update");
-            // Per theory/CALHA.md SS6.5: patches ONLY the pod-template-hash
+            // Patches ONLY the pod-template-hash
             // annotation on the target Deployment, driving a normal rolling
             // update. Never touches the ConfigMap (Flux already owns that write).
             let patch = json!({

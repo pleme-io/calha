@@ -1,7 +1,7 @@
 use clap::Parser;
 
 /// `calha` — drives the restart-required half of a config hot-swap change
-/// through a normal rolling update. See `theory/CALHA.md`.
+/// through a normal rolling update.
 #[derive(Parser, Debug)]
 #[command(version, about)]
 struct Args {

@@ -1,5 +1,5 @@
 (defrepo calha
-  :description "Calha (Brazilian-Portuguese, gutter/channel) -- a Kubernetes controller that drives the restart-required half of a config-hot-swap change through a normal rolling update, gated by formigueiro's outorga shadow-first promotion policy, structurally walled to the DISCOVERED config tier (never touches git/Flux-owned config). Composes shikumi::ConfigStore/resolve_progressive/Provenance + breathe-provider's ConfigReload/DisruptionClass shape + formigueiro::outorga::PromotionPolicy + engenho_controllers::Controller. Design tier per theory/CALHA.md; this repo carries the M2-M4 controller work (CalhaPolicy CRD, plan_tick, the controller binary)."
+  :description "Calha (Brazilian-Portuguese, gutter/channel) -- a Kubernetes controller that drives the restart-required half of a config-hot-swap change through a normal rolling update, gated by formigueiro's outorga shadow-first promotion policy, structurally walled to the DISCOVERED config tier (never touches git/Flux-owned config). Composes shikumi::ConfigStore/resolve_progressive/Provenance + breathe-provider's ConfigReload/DisruptionClass shape + formigueiro::outorga::PromotionPolicy + engenho_controllers::Controller. This repo carries the M2-M4 controller work (CalhaPolicy CRD, plan_tick, the controller binary)."
   :kind :rust-tool
   :visibility :public
   :binary "calha"

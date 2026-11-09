@@ -1,12 +1,12 @@
 # calha
 
-> Calha (Brazilian-Portuguese, gutter/channel) -- a Kubernetes controller that drives the restart-required half of a config-hot-swap change through a normal rolling update, gated by formigueiro's outorga shadow-first promotion policy, structurally walled to the DISCOVERED config tier (never touches git/Flux-owned config). Composes shikumi::ConfigStore/resolve_progressive/Provenance + breathe-provider's ConfigReload/DisruptionClass shape + formigueiro::outorga::PromotionPolicy. Design tier per [theory/CALHA.md](https://github.com/pleme-io/theory/blob/main/CALHA.md); this repo carries the M2-M4 controller work (CalhaPolicy CRD, plan_tick, the controller binary).
+> Calha (Brazilian-Portuguese, gutter/channel) -- a Kubernetes controller that drives the restart-required half of a config-hot-swap change through a normal rolling update, gated by formigueiro's outorga shadow-first promotion policy, structurally walled to the DISCOVERED config tier (never touches git/Flux-owned config). Composes shikumi::ConfigStore/resolve_progressive/Provenance + breathe-provider's ConfigReload/DisruptionClass shape + formigueiro::outorga::PromotionPolicy. This repo carries the M2-M4 controller work (CalhaPolicy CRD, plan_tick, the controller binary).
 
 ## Status (tier-honest, never rounded up)
 
 - **`src/crd.rs`, `src/runtime.rs`** -- real, tested. `plan_tick` is a pure,
   zero-I/O decision function (7 unit tests, all green) composing
-  `outorga::PromotionPolicy` exactly as `theory/CALHA.md` §6/§14.2 designs it.
+  `outorga::PromotionPolicy` exactly as the design calls for.
 - **`src/watermark.rs`, `src/controller.rs`** -- real, compiles clean, but
   **never run against a live cluster or a real target's `/healthz/config`
   endpoint.** The wire shape (`ConfigSyncProof`) is `calha`'s own mirror of

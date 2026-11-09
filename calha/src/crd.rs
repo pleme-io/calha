@@ -1,6 +1,6 @@
 //! The `CalhaPolicy` CRD (group `calha.pleme.io/v1alpha1`) — one declaration
 //! per target Deployment whose restart-required config half `calha` drives
-//! through a rolling update. See `theory/CALHA.md` §5.2/§6.5 for the design.
+//! through a rolling update.
 
 use kube::CustomResource;
 use schemars::JsonSchema;
@@ -15,8 +15,8 @@ pub struct TargetRef {
     /// The namespace both the Deployment and the target's `/healthz/config`
     /// endpoint live in.
     pub namespace: String,
-    /// The target's own `/healthz/config` port (serving a `ConfigSyncProof`,
-    /// per `theory/CALHA.md` §6.3's `sync_proof()`).
+    /// The target's own `/healthz/config` port (serving a `ConfigSyncProof`
+    /// from its `sync_proof()`).
     #[serde(default = "default_healthz_port")]
     pub healthz_port: u16,
 }
@@ -25,7 +25,7 @@ fn default_healthz_port() -> u16 {
     9090
 }
 
-/// The only legal value today (`theory/CALHA.md` §5.2). `calha` may only act
+/// The only legal value today. `calha` may only act
 /// on config whose resolved value came from the DISCOVERED tier — a fact
 /// that was never committed to git in the first place, so patching it is not
 /// a GitOps violation. `File`/`Env`/`Default`-tier changes flow through Flux,

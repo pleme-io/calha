@@ -1,5 +1,5 @@
 //! A thin client reading a target's `/healthz/config` — the
-//! `shikumi::hotswap::ConfigSyncProof` (`theory/CALHA.md` §6.3) a hot-swap-
+//! `shikumi::hotswap::ConfigSyncProof` a hot-swap-
 //! aware target exposes. Ported SHAPE, not imported TYPE, from
 //! `breathe-provider`'s `ConfigReload`-gated-write pattern; the mirror types
 //! below are `calha`'s own -- this crate has no compile-time dependency on
